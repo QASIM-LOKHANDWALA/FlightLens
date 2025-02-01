@@ -31,4 +31,52 @@
     {% endfor %}
   </div>
 </div>
+<button
+  onclick="getNearbyAirports()"
+  class="bg-blue-500 text-white px-4 py-2 rounded-lg"
+>
+  Find Nearest Airports
+</button>
+
+<div id="nearbyAirports" class="mt-4"></div>
+
+<script>
+  function getNearbyAirports() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        let lat = position.coords.latitude;
+        let lon = position.coords.longitude;
+
+        fetch(`/airports/nearby/?lat=${lat}&lon=${lon}`)
+          .then((response) => response.json())
+          .then((data) => displayAirports(data))
+          .catch((error) => console.error("Error:", error));
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
+
+  function displayAirports(data) {
+    let container = document.getElementById("nearbyAirports");
+    container.innerHTML = "";
+
+    if (data.length === 0) {
+      container.innerHTML = "<p>No airports found nearby.</p>";
+      return;
+    }
+
+    data.forEach((airport) => {
+      let card = `
+            <div class="bg-white p-4 shadow-md rounded-lg border mb-2">
+                <h2 class="text-xl font-bold">${airport.name}</h2>
+                <p><strong>IATA:</strong> ${airport.iataCode}</p>
+                <p><strong>Country:</strong> ${airport.address.countryName}</p>
+                <p><strong>Distance:</strong> ${airport.distance.value} ${airport.distance.unit}</p>
+            </div>
+        `;
+      container.innerHTML += card;
+    });
+  }
+</script>
 {% endblock %}
