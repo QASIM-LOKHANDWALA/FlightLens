@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 def register_view(request):
-  pass
+  return render(request, 'user_auth/register.html')
 
 def login_view(request):
   if request.method == 'POST':
