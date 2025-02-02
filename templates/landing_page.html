@@ -1,303 +1,404 @@
 {% extends "layout.html" %} 
 {% load static %}
 {% block content %}
+{% include "navigation_bar.html" %}
+<div class="relative min-h-screen overflow-hidden">
+  <div class="absolute inset-0 bg-slate-900">
+    <div class="absolute inset-0 bg-gradient-to-r from-sky-900/90 to-slate-900/90"></div>
+    <div class="absolute inset-0 bg-[url('{% static "images/hero-bg.jpg" %}')] bg-cover bg-center opacity-40"></div>
+  </div>
 
-<header class="relative bg-cover bg-center h-screen flex items-center" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),url({% static "images/hero-bg.jpg" %});">
-  <div class="container mx-auto px-4">
-    <div class="max-w-3xl mx-auto text-center">
-      <h1
-        class="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight opacity-0 transform translate-y-4 transition-all duration-1000 ease-out"
-        id="hero-title"
-      >
-        Your Window to the World of Aviation
-      </h1>
-      <p
-        class="text-xl text-gray-200 mb-8 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out delay-300"
-        id="hero-description"
-      >
-        Explore real-time flight data, comprehensive airport information, and
-        detailed aviation analytics all in one place.
-      </p>
-      <div
-        class="flex flex-col sm:flex-row justify-center gap-4 opacity-0 transform translate-y-4 transition-all duration-1000 ease-out delay-500"
-        id="hero-buttons"
-      >
-        <a
-          href="#search"
-          class="bg-sky-600 hover:bg-sky-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors duration-300 inline-block"
+  <nav class="relative z-10 bg-transparent">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="text-2xl font-bold text-white">Flight Lens</div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#search" class="text-white hover:text-sky-400 transition-colors">Track</a>
+          <a href="#features" class="text-white hover:text-sky-400 transition-colors">Features</a>
+          <a href="#analytics" class="text-white hover:text-sky-400 transition-colors">Analytics</a>
+          <a href="#contact" class="text-white hover:text-sky-400 transition-colors">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="relative z-10 flex items-center min-h-[calc(100vh-80px)]">
+    <div class="container mx-auto px-6">
+      <div class="max-w-4xl">
+        <h1 
+          class="text-5xl md:text-7xl font-bold text-white mb-6 opacity-0 transform translate-y-8 transition-all duration-1000"
+          id="hero-title"
         >
-          Track Flights
-        </a>
-        <a
-          href="#analytics"
-          class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-slate-900 px-8 py-3 rounded-lg text-lg font-semibold transition-colors duration-300 inline-block"
+          Navigate the<br/>
+          <span class="text-sky-400">Future of Flight</span>
+        </h1>
+        <p 
+          class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl opacity-0 transform translate-y-8 transition-all duration-1000 delay-300"
+          id="hero-description"
         >
-          View Analytics
-        </a>
+          Experience real-time aviation tracking with advanced analytics and comprehensive flight data at your fingertips.
+        </p>
+        <div 
+          class="flex flex-col sm:flex-row gap-4 opacity-0 transform translate-y-8 transition-all duration-1000 delay-500"
+          id="hero-buttons"
+        >
+          <a href="#search" class="inline-flex items-center px-8 py-4 rounded-lg bg-sky-500 text-white font-semibold hover:bg-sky-600 transition-all transform hover:scale-105">
+            Start Tracking
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+          <a href="#features" class="inline-flex items-center px-8 py-4 rounded-lg border-2 border-white text-white font-semibold hover:bg-white/10 transition-all">
+            Learn More
+          </a>
+        </div>
       </div>
     </div>
   </div>
-</header>
 
-<section id="search" class="py-16 bg-gradient-to-b from-gray-50 to-white">
-  <div class="container mx-auto px-4">
+  <div class="absolute bottom-0 left-0 right-0 bg-white/10 backdrop-blur-lg border-t border-white/20">
+    <div class="container mx-auto px-6 py-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white">2.5M+</div>
+          <div class="text-gray-300">Daily Flights</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white">180+</div>
+          <div class="text-gray-300">Countries</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white">5000+</div>
+          <div class="text-gray-300">Airports</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white">99.9%</div>
+          <div class="text-gray-300">Accuracy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="search" class="py-24 bg-gray-50">
+  <div class="container mx-auto px-6">
     <div class="max-w-4xl mx-auto">
-      <div
-        class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
-      >
-        <form action="{% url "search" %}" method="post">
+      <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:scale-[1.02] transition-all duration-300">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Track Your Flight</h2>
+        <form action="{% url 'search' %}" method="post">
           {% csrf_token %}
           <div class="flex flex-col md:flex-row gap-4">
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1"
-              >City Code</label
-            >
-            <input
-              type="text"
-              name="city_code"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-shadow duration-300"
-              placeholder="Enter your city..."
-            />
+            <div class="flex-1">
+              <label class="block text-sm font-medium text-gray-700 mb-1">City Code</label>
+              <input
+                type="text"
+                name="city_code"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-shadow duration-300"
+                placeholder="Enter your city..."
+              />
+            </div>
+            <div class="flex-1">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input 
+                type="date" 
+                name="date" 
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+              >
+            </div>
+            <button class="bg-sky-500 text-white px-8 py-3 rounded-lg hover:bg-sky-600 transition-colors duration-300 mt-6 md:mt-0 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
+              Search
+            </button>
           </div>
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-            <input type="date" name="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500">
-          </div>
-          <button
-            class="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors duration-300 mt-6 md:mt-0 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-          >
-            Search
-          </button>
-        </div>
         </form>
       </div>
     </div>
   </div>
 </section>
 
-<section class="py-16 bg-white">
-  <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center mb-12">
-      Comprehensive Aviation Data
-    </h2>
+<section id="features" class="py-24 bg-white">
+  <div class="container mx-auto px-6">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Powerful Features</h2>
+      <p class="text-xl text-gray-600">Experience aviation data like never before with our comprehensive suite of tools.</p>
+    </div>
+    
     <div class="grid md:grid-cols-3 gap-8">
-      <div
-        class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-      >
-        <div class="text-sky-600 mb-4">
-          <svg
-            class="h-12 w-12 mx-auto"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-            ></path>
+      <div class="group bg-white rounded-2xl p-8 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200">
+        <div class="w-16 h-16 bg-sky-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
+          <svg class="w-8 h-8 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
           </svg>
         </div>
-        <h3 class="text-xl font-semibold text-center mb-4">
-          Real-Time Tracking
-        </h3>
-        <p class="text-gray-600 text-center">
-          Monitor flights in real-time with accurate location data and status
-          updates.
-        </p>
+        <h3 class="text-2xl font-semibold mb-4">Real-Time Tracking</h3>
+        <p class="text-gray-600 leading-relaxed">Monitor flights in real-time with precision tracking and instant updates on location, speed, and altitude.</p>
       </div>
-
-      <div
-        class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-      >
-        <div class="text-sky-600 mb-4">
-          <svg
-            class="h-12 w-12 mx-auto"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-            ></path>
+      
+      <div class="group bg-white rounded-2xl p-8 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200">
+        <div class="w-16 h-16 bg-sky-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
+          <svg class="w-8 h-8 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
           </svg>
         </div>
-        <h3 class="text-xl font-semibold text-center mb-4">
-          Advanced Analytics
-        </h3>
-        <p class="text-gray-600 text-center">
-          Dive deep into historical flight data with comprehensive analytics
-          tools.
-        </p>
+        <h3 class="text-2xl font-semibold mb-4">Smart Analytics</h3>
+        <p class="text-gray-600 leading-relaxed">Gain valuable insights with our advanced analytics tools, offering detailed reports and trend analysis.</p>
       </div>
-
-      <div
-        class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-      >
-        <div class="text-sky-600 mb-4">
-          <svg
-            class="h-12 w-12 mx-auto"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-            ></path>
+      
+      <div class="group bg-white rounded-2xl p-8 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200">
+        <div class="w-16 h-16 bg-sky-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
+          <svg class="w-8 h-8 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
           </svg>
         </div>
-        <h3 class="text-xl font-semibold text-center mb-4">
-          Airport Information
-        </h3>
-        <p class="text-gray-600 text-center">
-          Access detailed information about airports worldwide.
-        </p>
+        <h3 class="text-2xl font-semibold mb-4">Global Coverage</h3>
+        <p class="text-gray-600 leading-relaxed">Access comprehensive information about airports worldwide, including facilities, routes, and real-time status.</p>
       </div>
     </div>
   </div>
 </section>
 
-<footer class="bg-slate-900 text-white py-12">
-  <div class="container mx-auto px-4">
-    <div class="grid md:grid-cols-4 gap-8">
-      <div>
-        <h4 class="text-lg font-semibold mb-4">About</h4>
-        <p class="text-gray-400">
-          Flight Lens provides comprehensive aviation data and analytics for
-          enthusiasts and professionals.
-        </p>
+<section class="relative py-24 overflow-hidden">
+  <div class="absolute inset-0 bg-slate-900">
+    <div class="absolute inset-0 bg-gradient-to-r from-sky-900/90 to-slate-900/90"></div>
+    <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z\' fill=\'%23ffffff\' fill-opacity=\'0.1\' fill-rule=\'evenodd\'/%3E%3C/svg%3E');"></div>
+  </div>
+
+  <div class="relative container mx-auto px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center justify-center p-2 bg-sky-500/10 rounded-full mb-8">
+        <svg class="w-6 h-6 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
       </div>
-      <div>
-        <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-        <ul class="space-y-2">
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >Home</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >Flights</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >Airports</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >Analytics</a
-            >
-          </li>
-        </ul>
+
+      <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+        Ready to Transform Your <span class="text-sky-400">Aviation Data</span> Experience?
+      </h2>
+      
+      <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+        Join thousands of aviation professionals who are already leveraging our platform for real-time insights and superior flight tracking.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a 
+          href="#get-started" 
+          class="w-full sm:w-auto bg-sky-500 hover:bg-sky-600 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-lg shadow-sky-500/20"
+        >
+          <span>Start Free Trial</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+        
+        <a 
+          href="#demo" 
+          class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 border border-white/10"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>Watch Demo</span>
+        </a>
       </div>
-      <div>
-        <h4 class="text-lg font-semibold mb-4">Resources</h4>
-        <ul class="space-y-2">
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >API Documentation</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >Help Center</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >Terms of Service</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >Privacy Policy</a
-            >
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-lg font-semibold mb-4">Connect</h4>
-        <ul class="space-y-2">
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >Contact Us</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >Twitter</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >LinkedIn</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-white transition-colors duration-300"
-              >GitHub</a
-            >
-          </li>
-        </ul>
+
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white mb-2">10K+</div>
+          <div class="text-gray-400">Active Users</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white mb-2">99.9%</div>
+          <div class="text-gray-400">Uptime</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white mb-2">24/7</div>
+          <div class="text-gray-400">Support</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-white mb-2">180+</div>
+          <div class="text-gray-400">Countries</div>
+        </div>
       </div>
     </div>
-    <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-      <p class="text-gray-400">&copy; 2025 Flight Lens. All rights reserved.</p>
+  </div>
+
+  <div class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-sky-500 rounded-full opacity-10 blur-3xl"></div>
+  <div class="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-sky-400 rounded-full opacity-10 blur-3xl"></div>
+</section>
+
+<footer class="bg-slate-900 text-white py-16">
+  <div class="container mx-auto px-6">
+    <div class="grid md:grid-cols-4 gap-12">
+      <div class="space-y-4">
+        <h4 class="text-2xl font-bold mb-6">Flight Lens</h4>
+        <p class="text-gray-400 leading-relaxed">
+          Empowering aviation professionals and enthusiasts with cutting-edge tracking and analytics tools.
+        </p>
+        <div class="flex space-x-4">
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+        </div>
+      </div>
+      
+      <div>
+        <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
+        <ul class="space-y-3">
+          <li>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+              <span class="mr-2">→</span>
+              Flight Tracking
+            </a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+              <span class="mr-2">→</span>
+              Airport Info
+            </a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+              <span class="mr-2">→</span>
+              Analytics Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+              <span class="mr-2">→</span>
+              API Access
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="text-lg font-semibold mb-6">Resources</h4>
+        <ul class="space-y-3">
+          <li>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+              <span class="mr-2">→</span>
+              Documentation
+            </a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+              <span class="mr-2">→</span>
+              Help Center
+            </a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+              <span class="mr-2">→</span>
+              Developer Guide
+            </a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors inline-flex items-center">
+              <span class="mr-2">→</span>
+              Status Page
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="text-lg font-semibold mb-6">Newsletter</h4>
+        <p class="text-gray-400 mb-4">Stay updated with the latest aviation news and features.</p>
+        <form class="space-y-4">
+          <div>
+            <input 
+              type="email" 
+              placeholder="Enter your email" 
+              class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-white"
+            >
+          </div>
+          <button class="w-full bg-sky-500 text-white px-6 py-3 rounded-lg hover:bg-sky-600 transition-colors">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="border-t border-slate-800 mt-12 pt-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400">&copy; 2025 Flight Lens. All rights reserved.</p>
+        <div class="flex space-x-6 mt-4 md:mt-0">
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie Policy</a>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
 
 <script>
-  document.addEventListener("DOMContentLoaded", (event) => {
-    const heroElements = ["hero-title", "hero-description", "hero-buttons"];
-    heroElements.forEach((id, index) => {
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        element.classList.remove("opacity-0", "translate-y-4");
-      }, index * 300);
-    });
+document.addEventListener("DOMContentLoaded", (event) => {
 
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute("href")).scrollIntoView({
-          behavior: "smooth",
-        });
+  const heroElements = ["hero-title", "hero-description", "hero-buttons"];
+  heroElements.forEach((id, index) => {
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      element.classList.remove("opacity-0", "translate-y-8");
+    }, index * 300);
+  });
+
+
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      const headerOffset = 80;
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
       });
     });
   });
+
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: "0px 0px -50px 0px"
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-fade-in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('section').forEach((section) => {
+    observer.observe(section);
+  });
+});
 </script>
+
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease forwards;
+  }
+</style>
 {% endblock %}
