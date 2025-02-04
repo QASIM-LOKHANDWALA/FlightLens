@@ -1,59 +1,137 @@
 {% extends "layout.html" %} 
 
 {% block content %}
-<div class="container mx-auto px-4 py-6">
-  <h1 class="text-3xl font-semibold text-center text-gray-800 mb-4">
-    Airports
-  </h1>
+<div class="relative min-h-screen overflow-hidden bg-gray-50">
+  <div class="absolute inset-0 bg-slate-900">
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-sky-900/90 to-slate-900/90 opacity-50"
+    ></div>
+  </div>
 
-  <div
-    id="airportList"
-    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-  >
-    {% for airport in airports %}
-    <div class="bg-white p-4 shadow-md rounded-lg border">
-      <h2 class="text-xl font-bold text-gray-800">
-        {{ airport.airport_name }}
-      </h2>
-      <p class="text-gray-600">
-        <strong>IATA Code:</strong> {{ airport.iata_code }}
-      </p>
-      <p class="text-gray-600">
-        <strong>ICAO Code:</strong> {{ airport.icao_code }}
-      </p>
-      <p class="text-gray-600">
-        <strong>Country:</strong> {{ airport.country_name }}
-      </p>
-      <p class="text-gray-600">
-        <strong>Timezone:</strong> {{ airport.timezone }}
+  <div class="relative z-10 container mx-auto px-6 py-16 mt-32">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <h1 class="text-4xl font-bold text-white mb-4">Global Airport Network</h1>
+      <p class="text-xl text-gray-300">
+        Explore our comprehensive database of airports worldwide. Discover
+        detailed information and find airports near you.
       </p>
     </div>
-    {% endfor %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      {% for airport in airports %}
+      <div
+        class="group bg-white rounded-2xl p-8 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200 shadow-lg"
+      >
+        <div
+          class="w-16 h-16 bg-sky-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors"
+        >
+          <svg
+            class="w-5 h-5 text-sky-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"
+            />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+          {{ airport.airport_name }}
+        </h2>
+        <div class="space-y-2 text-gray-600">
+          <p>
+            <strong class="text-sky-600">IATA Code:</strong> {{ airport.iata_code }}
+          </p>
+          <p>
+            <strong class="text-sky-600">ICAO Code:</strong> {{ airport.icao_code }}
+          </p>
+          <p>
+            <strong class="text-sky-600">Country:</strong> {{ airport.country_name }}
+          </p>
+          <p>
+            <strong class="text-sky-600">Timezone:</strong> {{ airport.timezone }}
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center">
+      <button
+        onclick="getNearbyAirports()"
+        class="inline-flex items-center px-8 py-4 rounded-lg bg-sky-500 text-white font-semibold hover:bg-sky-600 transition-all transform hover:scale-105"
+      >
+        Find Nearest Airports
+        <svg
+          class="w-5 h-5 ml-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 8l4 4m0 0l-4 4m4-4H3"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <div id="nearbyAirports" class="mt-12 max-w-4xl mx-auto"></div>
   </div>
 </div>
-<button
-  onclick="getNearbyAirports()"
-  class="bg-blue-500 text-white px-4 py-2 rounded-lg"
->
-  Find Nearest Airports
-</button>
-
-<div id="nearbyAirports" class="mt-4"></div>
 
 <script>
   function getNearbyAirports() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        let lat = position.coords.latitude;
-        let lon = position.coords.longitude;
+    const nearbyContainer = document.getElementById("nearbyAirports");
+    nearbyContainer.innerHTML = `
+    <div class="flex justify-center items-center">
+      <svg class="animate-spin h-10 w-10 text-sky-500" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </div>
+  `;
 
-        fetch(`/airports/nearby/?lat=${lat}&lon=${lon}`)
-          .then((response) => response.json())
-          .then((data) => displayAirports(data))
-          .catch((error) => console.error("Error:", error));
-      });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          let lat = position.coords.latitude;
+          let lon = position.coords.longitude;
+
+          fetch(`/airports/nearby/?lat=${lat}&lon=${lon}`)
+            .then((response) => response.json())
+            .then((data) => displayAirports(data))
+            .catch((error) => {
+              nearbyContainer.innerHTML = `
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+              <strong class="font-bold">Error!</strong>
+              <span class="block sm:inline">Unable to fetch nearby airports. Please try again later.</span>
+            </div>
+          `;
+            });
+        },
+        (error) => {
+          nearbyContainer.innerHTML = `
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+          <strong class="font-bold">Location Access Denied!</strong>
+          <span class="block sm:inline">Please enable location services to find nearby airports.</span>
+        </div>
+      `;
+        }
+      );
     } else {
-      alert("Geolocation is not supported by this browser.");
+      nearbyContainer.innerHTML = `
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Not Supported!</strong>
+        <span class="block sm:inline">Geolocation is not supported by this browser.</span>
+      </div>
+    `;
     }
   }
 
@@ -62,21 +140,51 @@
     container.innerHTML = "";
 
     if (data.length === 0) {
-      container.innerHTML = "<p>No airports found nearby.</p>";
+      container.innerHTML = `
+      <div class="bg-white rounded-2xl p-8 text-center border border-gray-100">
+        <p class="text-gray-600 text-xl">No airports found nearby.</p>
+      </div>
+    `;
       return;
     }
 
+    let airportsHtml = `
+    <div class="space-y-6">
+      <h3 class="text-2xl font-bold text-white text-center mb-6">Nearest Airports</h3>
+  `;
+
     data.forEach((airport) => {
-      let card = `
-            <div class="bg-white p-4 shadow-md rounded-lg border mb-2">
-                <h2 class="text-xl font-bold">${airport.name}</h2>
-                <p><strong>IATA:</strong> ${airport.iataCode}</p>
-                <p><strong>Country:</strong> ${airport.address.countryName}</p>
-                <p><strong>Distance:</strong> ${airport.distance.value} ${airport.distance.unit}</p>
+      airportsHtml += `
+      <div class="bg-white rounded-2xl p-6 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 class="text-xl font-semibold text-gray-900 mb-2">${airport.name}</h4>
+            <div class="space-y-1 text-gray-600">
+              <p><strong class="text-sky-600">IATA:</strong> ${airport.iataCode}</p>
+              <p><strong class="text-sky-600">Country:</strong> ${airport.address.countryName}</p>
+              <p><strong class="text-sky-600">Distance:</strong> ${airport.distance.value} ${airport.distance.unit}</p>
             </div>
-        `;
-      container.innerHTML += card;
+          </div>
+          <svg
+            class="w-5 h-5 text-sky-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"
+            />
+          </svg>
+        </div>
+      </div>
+    `;
     });
+
+    airportsHtml += `</div>`;
+    container.innerHTML = airportsHtml;
   }
 </script>
 {% endblock %}
