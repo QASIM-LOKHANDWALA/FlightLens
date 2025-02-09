@@ -1,6 +1,4 @@
-{% extends "layout.html" %} 
-
-{% block content %}
+{% extends "layout.html" %} {% block content %}
 <div class="relative min-h-screen overflow-hidden bg-gray-50">
   <div class="absolute inset-0 bg-slate-900">
     <div
@@ -8,183 +6,343 @@
     ></div>
   </div>
 
-  <div class="relative z-10 container mx-auto px-6 py-16 mt-32">
+  <div class="relative z-10 container mx-auto px-6 py-16 mt-24">
     <div class="text-center max-w-3xl mx-auto mb-12">
       <h1 class="text-4xl font-bold text-white mb-4">Global Airport Network</h1>
       <p class="text-xl text-gray-300">
-        Explore our comprehensive database of airports worldwide. Discover
-        detailed information and find airports near you.
+        Explore our comprehensive database of airports worldwide. Search,
+        discover, and find detailed information about airports near you.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-      {% for airport in airports %}
-      <div
-        class="group bg-white rounded-2xl p-8 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200 shadow-lg"
-      >
-        <div
-          class="w-16 h-16 bg-sky-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors"
-        >
-          <svg
-            class="w-5 h-5 text-sky-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+    <div class="max-w-2xl mx-auto mb-16">
+      <div class="bg-white rounded-xl shadow-lg p-6 space-y-4">
+        <div class="flex gap-4">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search airports by name, city, or IATA code..."
+            class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+          />
+          <button
+            onclick="searchAirports()"
+            class="px-6 py-3 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"
-            />
-          </svg>
+            Search
+          </button>
         </div>
-        <h2 class="text-2xl font-semibold text-gray-900 mb-4">
-          {{ airport.airport_name }}
-        </h2>
-        <div class="space-y-2 text-gray-600">
-          <p>
-            <strong class="text-sky-600">IATA Code:</strong> {{ airport.iata_code }}
-          </p>
-          <p>
-            <strong class="text-sky-600">ICAO Code:</strong> {{ airport.icao_code }}
-          </p>
-          <p>
-            <strong class="text-sky-600">Country:</strong> {{ airport.country_name }}
-          </p>
-          <p>
-            <strong class="text-sky-600">Timezone:</strong> {{ airport.timezone }}
-          </p>
+
+        <div class="flex gap-4">
+          <select
+            id="countryFilter"
+            onchange="filterByCountry()"
+            class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+          >
+            <option value="">All Countries</option>
+            {% for country in countries %}
+            <option value="{{ country.iso2 }}">{{ country.name }}</option>
+            {% endfor %}
+          </select>
+
+          <button
+            onclick="getNearbyAirports()"
+            class="px-6 py-3 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors flex items-center gap-2"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            Nearby Airports
+          </button>
         </div>
       </div>
-      {% endfor %}
     </div>
 
-    <div class="text-center">
-      <button
-        onclick="getNearbyAirports()"
-        class="inline-flex items-center px-8 py-4 rounded-lg bg-sky-500 text-white font-semibold hover:bg-sky-600 transition-all transform hover:scale-105"
-      >
-        Find Nearest Airports
-        <svg
-          class="w-5 h-5 ml-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+    <div id="resultsContainer">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {% for airport in airports %}
+        <div
+          class="group bg-white rounded-2xl p-8 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200 shadow-lg cursor-pointer"
+          onclick="showAirportDetails('{{ airport.iata_code }}')"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M17 8l4 4m0 0l-4 4m4-4H3"
-          />
-        </svg>
-      </button>
+          <div
+            class="w-16 h-16 bg-sky-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors"
+          >
+            <svg
+              class="w-5 h-5 text-sky-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"
+              />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+            {{ airport.airport_name }}
+          </h2>
+          <div class="space-y-2 text-gray-600">
+            <p>
+              <strong class="text-sky-600">IATA Code:</strong> {{ airport.iata_code }}
+            </p>
+            <p>
+              <strong class="text-sky-600">ICAO Code:</strong> {{ airport.icao_code }}
+            </p>
+            <p>
+              <strong class="text-sky-600">Country:</strong> {{ airport.country_name }}
+            </p>
+            <p>
+              <strong class="text-sky-600">Timezone:</strong> {{ airport.timezone }}
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
-
-    <div id="nearbyAirports" class="mt-12 max-w-4xl mx-auto"></div>
   </div>
 </div>
 
 <script>
+  let currentQuery = "";
+  let currentCountry = "";
+
+  function searchAirports() {
+    const query = document.getElementById("searchInput").value.trim();
+    if (query === "") return;
+
+    currentQuery = query;
+    showLoader();
+
+    fetch(`/airports/search/?q=${encodeURIComponent(query)}`)
+      .then((response) => response.json())
+      .then((data) => {
+        displaySearchResults(data.data);
+      })
+      .catch((error) => {
+        showError("Failed to search airports");
+      });
+  }
+
+  function filterByCountry() {
+    const country = document.getElementById("countryFilter").value;
+    currentCountry = country;
+    showLoader();
+
+    fetch(`/?country=${country}`)
+      .then((response) => response.text())
+      .then((html) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const newResults = doc.querySelector("#resultsContainer");
+        document.getElementById("resultsContainer").innerHTML =
+          newResults.innerHTML;
+      })
+      .catch((error) => {
+        showError("Failed to filter airports");
+      });
+  }
+
+  function displaySearchResults(airports) {
+    const container = document.getElementById("resultsContainer");
+    if (!airports || airports.length === 0) {
+      container.innerHTML = `
+            <div class="text-center py-12">
+                <p class="text-xl text-gray-300">No airports found matching your search.</p>
+            </div>
+        `;
+      return;
+    }
+
+    let html =
+      '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">';
+    airports.forEach((airport) => {
+      console.log("Processing airport:", airport);
+      const airportData = {
+        name: airport.airport_name || airport.name || "N/A",
+        iata: airport.iata_code || airport.iataCode || "N/A",
+        country:
+          airport.country_name ||
+          (airport.address ? airport.address.countryName : "N/A"),
+        city:
+          airport.city_name ||
+          (airport.address ? airport.address.cityName : "N/A"),
+        distance: airport.distance
+          ? `${airport.distance.value} ${airport.distance.unit}`
+          : null,
+      };
+
+      html += `
+            <div class="group bg-white rounded-2xl p-8 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200 shadow-lg cursor-pointer"
+                 onclick="showAirportDetails('${airportData.iata}')">
+                <div class="w-16 h-16 bg-sky-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
+                    <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+                    ${airportData.name}
+                </h2>
+                <div class="space-y-2 text-gray-600">
+                    <p><strong class="text-sky-600">IATA Code:</strong> ${
+                      airportData.iata
+                    }</p>
+                    <p><strong class="text-sky-600">Country:</strong> ${
+                      airportData.country
+                    }</p>
+                    <p><strong class="text-sky-600">City:</strong> ${
+                      airportData.city
+                    }</p>
+                    ${
+                      airportData.distance
+                        ? `<p><strong class="text-sky-600">Distance:</strong> ${airportData.distance}</p>`
+                        : ""
+                    }
+                </div>
+            </div>
+        `;
+    });
+    html += "</div>";
+    container.innerHTML = html;
+  }
+
   function getNearbyAirports() {
-    const nearbyContainer = document.getElementById("nearbyAirports");
-    nearbyContainer.innerHTML = `
-    <div class="flex justify-center items-center">
-      <svg class="animate-spin h-10 w-10 text-sky-500" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-    </div>
-  `;
+    console.log("getNearbyAirports function called");
+    const nearbyContainer = document.getElementById("resultsContainer");
+    showLoader();
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log(
+            "Got position:",
+            position.coords.latitude,
+            position.coords.longitude
+          );
           let lat = position.coords.latitude;
           let lon = position.coords.longitude;
 
           fetch(`/airports/nearby/?lat=${lat}&lon=${lon}`)
-            .then((response) => response.json())
-            .then((data) => displayAirports(data))
+            .then((response) => {
+              console.log("Raw API response:", response);
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Parsed API response data:", data);
+              displayAirports(data);
+            })
             .catch((error) => {
-              nearbyContainer.innerHTML = `
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-              <strong class="font-bold">Error!</strong>
-              <span class="block sm:inline">Unable to fetch nearby airports. Please try again later.</span>
-            </div>
-          `;
+              console.error("Fetch error:", error);
+              showError(
+                "Unable to fetch nearby airports. Please try again later."
+              );
             });
         },
         (error) => {
-          nearbyContainer.innerHTML = `
-        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
-          <strong class="font-bold">Location Access Denied!</strong>
-          <span class="block sm:inline">Please enable location services to find nearby airports.</span>
-        </div>
-      `;
+          console.error("Geolocation error:", error);
+          showError("Please enable location services to find nearby airports.");
         }
       );
     } else {
-      nearbyContainer.innerHTML = `
-      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-        <strong class="font-bold">Not Supported!</strong>
-        <span class="block sm:inline">Geolocation is not supported by this browser.</span>
-      </div>
-    `;
+      console.error("Geolocation not supported");
+      showError("Geolocation is not supported by this browser.");
     }
   }
 
   function displayAirports(data) {
-    let container = document.getElementById("nearbyAirports");
-    container.innerHTML = "";
+    console.log("displayAirports received data:", data);
 
-    if (data.length === 0) {
-      container.innerHTML = `
-      <div class="bg-white rounded-2xl p-8 text-center border border-gray-100">
-        <p class="text-gray-600 text-xl">No airports found nearby.</p>
-      </div>
-    `;
+    const airports = data.data || data;
+    console.log("Processed airports data:", airports);
+
+    if (!airports || airports.length === 0) {
+      console.log("No airports found in data");
+      document.getElementById("resultsContainer").innerHTML = `
+            <div class="text-center py-12">
+                <p class="text-xl text-gray-300">No airports found nearby.</p>
+            </div>
+        `;
       return;
     }
 
-    let airportsHtml = `
-    <div class="space-y-6">
-      <h3 class="text-2xl font-bold text-white text-center mb-6">Nearest Airports</h3>
-  `;
+    let html =
+      '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">';
 
-    data.forEach((airport) => {
-      airportsHtml += `
-      <div class="bg-white rounded-2xl p-6 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200 shadow-lg">
-        <div class="flex items-center justify-between">
-          <div>
-            <h4 class="text-xl font-semibold text-gray-900 mb-2">${airport.name}</h4>
-            <div class="space-y-1 text-gray-600">
-              <p><strong class="text-sky-600">IATA:</strong> ${airport.iataCode}</p>
-              <p><strong class="text-sky-600">Country:</strong> ${airport.address.countryName}</p>
-              <p><strong class="text-sky-600">Distance:</strong> ${airport.distance.value} ${airport.distance.unit}</p>
+    airports.forEach((airport, index) => {
+      console.log(`Processing airport ${index}:`, airport);
+
+      html += `
+            <div class="group bg-white rounded-2xl p-8 hover:bg-sky-50 transition-all duration-300 border border-gray-100 hover:border-sky-200 shadow-lg">
+                <div class="w-16 h-16 bg-sky-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
+                    <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+                    ${airport.name || airport.airport_name || "N/A"}
+                </h2>
+                <div class="space-y-2 text-gray-600">
+                    <p><strong class="text-sky-600">IATA Code:</strong> ${
+                      airport.iataCode || airport.iata_code || "N/A"
+                    }</p>
+                    <p><strong class="text-sky-600">City:</strong> ${
+                      airport.address?.cityName || airport.city_name || "N/A"
+                    }</p>
+                    <p><strong class="text-sky-600">Country:</strong> ${
+                      airport.address?.countryName ||
+                      airport.country_name ||
+                      "N/A"
+                    }</p>
+                    <p><strong class="text-sky-600">Distance:</strong> ${
+                      airport.distance?.value || "N/A"
+                    } ${airport.distance?.unit || ""}</p>
+                </div>
             </div>
-          </div>
-          <svg
-            class="w-5 h-5 text-sky-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"
-            />
-          </svg>
-        </div>
-      </div>
-    `;
+        `;
     });
 
-    airportsHtml += `</div>`;
-    container.innerHTML = airportsHtml;
+    html += "</div>";
+    console.log("Generated HTML:", html);
+    document.getElementById("resultsContainer").innerHTML = html;
+  }
+
+  function showError(message) {
+    console.error("Showing error:", message);
+    document.getElementById("resultsContainer").innerHTML = `
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            ${message}
+        </div>
+    `;
+  }
+
+  function showLoader() {
+    console.log("Showing loader");
+    document.getElementById("resultsContainer").innerHTML = `
+        <div class="flex justify-center items-center py-12">
+            <svg class="animate-spin h-10 w-10 text-sky-500" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+    `;
   }
 </script>
 {% endblock %}

@@ -1,52 +1,43 @@
-import os
-from dotenv import load_dotenv
-import requests
 from django.shortcuts import render
 from django.http import JsonResponse
 from .api_functions import AirportAPI
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 
 airport_api = AirportAPI()
-load_dotenv()
-def get_amadeus_token():
-  url = "https://test.api.amadeus.com/v1/security/oauth2/token"
-  data = {
-    "grant_type": "client_credentials",
-    "client_id": os.getenv("CLIENT_ID"),
-    "client_secret": os.getenv("CLIENT_SECRET"),
-  }
-  response = requests.post(url, data=data)
-  return response.json().get("access_token")
+
+@cache_page(60 * 15)
+def home(request):
+    country = request.GET.get('country')
+    airports = airport_api.get_airports(country=country)
+    context = {
+        'airports': airports,
+        'error': 'Error fetching airports' if not airports else None
+    }
+    return render(request, 'airports/airport_home.html', context)
 
 def nearby_airports(request):
-  lat = request.GET.get("lat")
-  lon = request.GET.get("lon")
+    print("Nearby airports view called")
+    lat = request.GET.get("lat")
+    lon = request.GET.get("lon")
+    radius = request.GET.get("radius", 100)
 
-  if not lat or not lon:
-      return JsonResponse({"error": "Latitude and Longitude required"}, status=400)
+    print(f"lat={lat}, lon={lon}, radius={radius}")
 
-  token = get_amadeus_token()
-  headers = {"Authorization": f"Bearer {token}"}
-  
-  url = f"https://test.api.amadeus.com/v1/reference-data/locations/airports?latitude={lat}&longitude={lon}&radius=100"
+    if not lat or not lon:
+        print("Missing coordinates")
+        return JsonResponse({"error": "Latitude and Longitude required"}, status=400)
 
-  response = requests.get(url, headers=headers)
+    try:
+        airports = airport_api.get_nearby_airports(float(lat), float(lon), int(radius))
+        return JsonResponse({"data": airports})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
-  if response.status_code != 200:
-    return JsonResponse({"error": "Failed to fetch airports"}, status=response.status_code)
-
-  return JsonResponse(response.json().get("data", []), safe=False)
-
-
-# Create your views here.
-def home(request):
-  airports = airport_api.get_airports()
-  if airports:
-    context = {
-      'airports': airports
-    }
-  else:
-    context = {
-      'airports': [],
-      'error': 'Error fetching airports'
-    }
-  return render(request, 'airports/airport_home.html',context)
+def search_airports(request):
+    query = request.GET.get('q')
+    if not query:
+        return JsonResponse({"error": "Search query required"}, status=400)
+    
+    results = airport_api.search_airports(query)
+    return JsonResponse({"data": results})
