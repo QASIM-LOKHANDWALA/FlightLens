@@ -1,0 +1,92 @@
+{% extends "layout.html" %} {% load static %} {% block content %}
+<h1 class="text-5xl font-bold text-gray-900 mb-6">Welcome to FlightLens</h1>
+<p class="text-xl text-gray-600 mb-8">
+  Your one-stop destination for flight search, tracking, and insights.
+</p>
+
+{% include "flights/search_form.html" %}
+
+<div class="container mx-auto px-6 py-16">
+  <h2 class="text-4xl font-bold text-gray-900 text-center mb-8">
+    Nearest Airport from Your Location
+  </h2>
+  <div
+    id="nearest-airport"
+    class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 text-center"
+  >
+    <p class="text-gray-600">Fetching the airport near you...</p>
+  </div>
+</div>
+
+<div class="container mx-auto px-6 py-16">
+  <h2 class="text-4xl font-bold text-gray-900 text-center mb-8">
+    Live Flight Tracking
+  </h2>
+  {% include "flights/tracking_form.html" %}
+</div>
+
+<div class="container mx-auto px-6 py-16">
+  <h2 class="text-4xl font-bold text-gray-900 text-center mb-8">
+    Popular Destinations
+  </h2>
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-2xl font-semibold text-gray-800">New York (JFK)</h3>
+      <p class="text-gray-600">
+        Explore flights to and from JFK International Airport.
+      </p>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-2xl font-semibold text-gray-800">London (LHR)</h3>
+      <p class="text-gray-600">Find flights to and from Heathrow Airport.</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-2xl font-semibold text-gray-800">Tokyo (HND)</h3>
+      <p class="text-gray-600">Discover flights for Haneda Airport.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function fetchNearestAirport() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        const response = await fetch(
+          `/flights/nearest_airport/?lat=${lat}&lon=${lon}`
+        );
+        const data = await response.json();
+        const container = document.getElementById("nearest-airport");
+        container.innerHTML = "";
+
+        if (!data) {
+          container.innerHTML =
+            "<p class='text-gray-600'>No airport found near you.</p>";
+        } else {
+          console.log("Nearest Airports:", data);
+          container.appendChild(createAirportCard(data.nearest_airport));
+        }
+      });
+    } else {
+      document.getElementById("nearest-airport").innerHTML =
+        "<p class='text-gray-600'>Geolocation is not supported.</p>";
+    }
+  }
+
+  function createAirportCard(airport) {
+    const card = document.createElement("div");
+    card.className = "bg-white p-6 rounded-lg shadow-lg";
+    card.innerHTML = `
+        <h3 class="text-2xl font-semibold text-gray-900">${airport.name}</h3>
+        <p class="text-gray-700 mt-2"><strong>${airport.iataCode}</strong></p>
+        <p class="text-gray-600">City: <strong>${airport.address.cityName}</strong></p>
+        <p class="text-gray-600">Distance: <strong>${airport.distance.value} ${airport.distance.unit}</strong></p>
+    `;
+    return card;
+  }
+
+  fetchNearestAirport();
+</script>
+{% endblock %}

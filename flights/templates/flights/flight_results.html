@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Flight Results{% endblock %}
+
+{% block content %}
+    <h1 class="text-5xl font-bold text-gray-900 mb-6">Flight Results</h1>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for flight in flights %}
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-2xl font-semibold text-gray-800">Flight: {{ flight.flightNumber }}</h3>
+            <p class="text-gray-600">From: {{ flight.origin }} → To: {{ flight.destination }}</p>
+            <p class="text-gray-600">Departure: {{ flight.departureTime }}</p>
+            <p class="text-gray-600">Arrival: {{ flight.arrivalTime }}</p>
+            <p class="text-gray-600">Price: ${{ flight.price }}</p>
+            <a href="{% url 'flight_details' flight.flightNumber %}" class="block mt-4 bg-sky-500 text-white text-center py-2 rounded-lg hover:bg-sky-600 transition">View Details</a>
+        </div>
+        {% empty %}
+        <p class="text-gray-600 text-center">No flights found. Try a different search.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

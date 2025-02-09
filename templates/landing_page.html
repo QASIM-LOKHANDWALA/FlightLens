@@ -71,7 +71,7 @@
     <div class="max-w-4xl mx-auto">
       <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:scale-[1.02] transition-all duration-300">
         <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Track Your Flight</h2>
-        <form action="{% url 'search' %}" method="post">
+        <form action="{% url 'flight_search' %}" method="post">
           {% csrf_token %}
           <div class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
@@ -166,7 +166,7 @@
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <a 
-          href="#get-started" 
+          href="{% url "register" %}" 
           class="w-full sm:w-auto bg-sky-500 hover:bg-sky-600 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-lg shadow-sky-500/20"
         >
           <span>Start Free Trial</span>

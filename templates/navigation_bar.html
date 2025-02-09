@@ -1,5 +1,5 @@
 <nav
-  class="bg-slate-900/95 backdrop-blur-lg fixed w-full z-50 shadow-lg border-b border-sky-900/20"
+  class="bg-slate-900/95 backdrop-blur-lg w-full z-50 shadow-lg border-b border-sky-900/20"
 >
   <div class="container mx-auto px-4">
     <div class="flex justify-between items-center h-20">
@@ -60,7 +60,7 @@
             class="absolute inset-x-0 h-0.5 bg-sky-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left bottom-0"
           ></span>
         </a>
-        <a href="" class="relative text-white group px-2 py-1">
+        <a href="{% url "airport_home" %}" class="relative text-white group px-2 py-1">
           <span class="relative z-10 flex items-center space-x-2">
             <svg
               class="w-4 h-4 text-sky-400"
@@ -105,7 +105,7 @@
       </div>
       <div class="hidden md:flex items-center ml-8">
         <a
-          href="#get-started"
+          href="{% url "register" %}"
           class="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg shadow-sky-500/20"
         >
           <span>Get Started</span>
